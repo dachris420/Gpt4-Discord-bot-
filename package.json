@@ -21,7 +21,15 @@
   "dependencies": {
     "chatgpt": "^5.1.2",
     "discord.js": "^14.8.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.6.1"
   },
-  "keywords": ["chatgpt", "chat-gpt", "openai", "ai", "discord.js", "discord", "discord bots"]
+  "keywords": [
+    "chatgpt",
+    "chat-gpt",
+    "openai",
+    "ai",
+    "discord.js",
+    "discord",
+    "discord bots"
+  ]
 }
