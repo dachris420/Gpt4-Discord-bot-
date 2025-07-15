@@ -14,6 +14,14 @@ class ChatGPTClient {
     this.options = Object.assign(optionDefaults, options);
   }
 
+  static splitText(text, size = 2000) {
+    const chunks = [];
+    for (let i = 0; i < text.length; i += size) {
+      chunks.push(text.slice(i, i + size));
+    }
+    return chunks;
+  }
+
   static async init(openAIAPIKey, options) {
     if (!openAIAPIKey) {
       throw new TypeError("❌ OpenAI API Key fehlt!");
@@ -57,7 +65,14 @@ class ChatGPTClient {
     const reply = await this.send(str, this.options.contextRemembering && context ? context : undefined);
 
     if (this.options.responseType === 'string') {
-      await interaction.editReply(reply.text);
+      const text = this.options.maxLength
+        ? reply.text.slice(0, this.options.maxLength)
+        : reply.text;
+      const chunks = ChatGPTClient.splitText(text, 2000);
+      await interaction.editReply(chunks.shift());
+      for (const chunk of chunks) {
+        await interaction.followUp(chunk);
+      }
     } else {
       const embed = new EmbedBuilder()
         .setColor(Colors.DarkerGrey)
@@ -99,7 +114,13 @@ class ChatGPTClient {
     await response.delete().catch(() => null);
 
     if (this.options.responseType === 'string') {
-      await message.reply(reply.text);
+      const text = this.options.maxLength
+        ? reply.text.slice(0, this.options.maxLength)
+        : reply.text;
+      const chunks = ChatGPTClient.splitText(text, 2000);
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
     } else {
       const embed = new EmbedBuilder()
         .setColor(Colors.DarkerGrey)

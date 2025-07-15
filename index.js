@@ -12,7 +12,7 @@ require('dotenv').config();
   const gpt = await ChatGPTClient.init(process.env.OPENAI_API_KEY, {
     contextRemembering: true,
     responseType: 'embed',
-    maxLength: 2000
+    maxLength: 20000
   });
 
   // Sobald Bot online ist
