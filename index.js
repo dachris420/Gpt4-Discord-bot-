@@ -11,8 +11,8 @@ require('dotenv').config();
   // GPT-Client asynchron initialisieren (WICHTIG!)
   const gpt = await ChatGPTClient.init(process.env.OPENAI_API_KEY, {
     contextRemembering: true,
-    responseType: 'embed',
-    maxLength: 2000
+    responseType: 'string',
+    maxLength: 20000
   });
 
   // Sobald Bot online ist
