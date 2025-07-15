@@ -22,6 +22,22 @@ class ChatGPTClient {
     return chunks;
   }
 
+  static async sendChunkedInteraction(interaction, text) {
+    const chunks = ChatGPTClient.splitText(text, 2000);
+    if (chunks.length === 0) return;
+    await interaction.editReply(chunks.shift());
+    for (const chunk of chunks) {
+      await interaction.followUp(chunk);
+    }
+  }
+
+  static async sendChunkedMessage(message, text) {
+    const chunks = ChatGPTClient.splitText(text, 2000);
+    for (const chunk of chunks) {
+      await message.reply(chunk);
+    }
+  }
+
   static async init(openAIAPIKey, options) {
     if (!openAIAPIKey) {
       throw new TypeError("❌ OpenAI API Key fehlt!");
@@ -64,15 +80,12 @@ class ChatGPTClient {
     const context = this.contextData.get(interaction.user.id);
     const reply = await this.send(str, this.options.contextRemembering && context ? context : undefined);
 
+    const text = this.options.maxLength
+      ? reply.text.slice(0, this.options.maxLength)
+      : reply.text;
+
     if (this.options.responseType === 'string') {
-      const text = this.options.maxLength
-        ? reply.text.slice(0, this.options.maxLength)
-        : reply.text;
-      const chunks = ChatGPTClient.splitText(text, 2000);
-      await interaction.editReply(chunks.shift());
-      for (const chunk of chunks) {
-        await interaction.followUp(chunk);
-      }
+      await ChatGPTClient.sendChunkedInteraction(interaction, text);
     } else {
       const embed = new EmbedBuilder()
         .setColor(Colors.DarkerGrey)
@@ -113,14 +126,12 @@ class ChatGPTClient {
     const reply = await this.send(str || message.content, this.options.contextRemembering && context ? context : undefined);
     await response.delete().catch(() => null);
 
+    const text = this.options.maxLength
+      ? reply.text.slice(0, this.options.maxLength)
+      : reply.text;
+
     if (this.options.responseType === 'string') {
-      const text = this.options.maxLength
-        ? reply.text.slice(0, this.options.maxLength)
-        : reply.text;
-      const chunks = ChatGPTClient.splitText(text, 2000);
-      for (const chunk of chunks) {
-        await message.reply(chunk);
-      }
+      await ChatGPTClient.sendChunkedMessage(message, text);
     } else {
       const embed = new EmbedBuilder()
         .setColor(Colors.DarkerGrey)

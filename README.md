@@ -78,3 +78,4 @@ const chatgpt = new ChatGPTClient('YOUR_OPENAI_API_KEY', {
 });
 
 ```
+Longer replies are automatically split and sent in sequence when they exceed Discord's 2000 character limit.
