@@ -71,10 +71,10 @@ module.exports = {
 
 You can toggle context remembering, and response type.
 
-```js
 const chatgpt = new ChatGPTClient('YOUR_OPENAI_API_KEY', {
   contextRemembering: true,
   responseType: 'string',
   maxLength: 20000 // limit GPT responses and split into 2000 char chunks
 });
+
 ```
