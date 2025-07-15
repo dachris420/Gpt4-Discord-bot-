@@ -8,7 +8,7 @@ class ChatGPTClient {
     const optionDefaults = {
       contextRemembering: true,
       responseType: 'embed',
-      maxLength: 2000
+      maxLength: 20000
     };
 
     this.options = Object.assign(optionDefaults, options);
