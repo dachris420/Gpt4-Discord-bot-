@@ -74,6 +74,7 @@ You can toggle context remebering, and response type.
 ```js
 const chatgpt = new ChatGPTClient('YOUR_OPENAI_API_KEY', {
   contextRemembering: true,
-  responseType: 'embed' // or 'string'
+  responseType: 'string',
+  maxLength: 20000 // limit GPT responses and split into 2000 char chunks
 });
 ```
